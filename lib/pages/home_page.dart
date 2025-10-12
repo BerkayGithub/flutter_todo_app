@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 import 'package:flutter_todo_app/models/task.dart';
+import 'package:flutter_todo_app/uiparts/task_list_item.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -60,10 +61,7 @@ class _HomePageState extends State<HomePage> {
               setState(() {
               });
             },
-            child: ListTile(
-              title: Text(oankiEleman.description),
-              subtitle: Text(oankiEleman.dateTimeOfTask.toString()),
-            ),
+            child: TaskListItem(task: oankiEleman)
           );
         },
         itemCount: taskList.length,
@@ -82,6 +80,7 @@ class _HomePageState extends State<HomePage> {
           width: MediaQuery.of(context).size.width,
           child: ListTile(
             title: TextField(
+              autofocus: true,
               decoration: InputDecoration(
                 hintText: "Görev nedir ?",
                 border: InputBorder.none,
