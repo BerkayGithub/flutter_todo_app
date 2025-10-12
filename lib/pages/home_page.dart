@@ -2,8 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 import 'package:flutter_todo_app/models/task.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  late List<Task> taskList;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    taskList = <Task>[];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +44,30 @@ class HomePage extends StatelessWidget {
           ),
         ],
       ),
+      body: ListView.builder(
+        itemBuilder: (context, index) {
+          var oankiEleman = taskList[index];
+          return Dismissible(
+            background: Row(
+              children: [
+                Icon(Icons.delete),
+                Text("Bu görevi sil")
+              ],
+            ),
+            key: Key(oankiEleman.id),
+            onDismissed: (direction){
+              taskList.removeAt(index);
+              setState(() {
+              });
+            },
+            child: ListTile(
+              title: Text(oankiEleman.description),
+              subtitle: Text(oankiEleman.dateTimeOfTask.toString()),
+            ),
+          );
+        },
+        itemCount: taskList.length,
+      ),
     );
   }
 
@@ -48,12 +86,18 @@ class HomePage extends StatelessWidget {
                 hintText: "Görev nedir ?",
                 border: InputBorder.none,
               ),
-              onSubmitted: (value){
+              onSubmitted: (value) {
                 Navigator.of(context).pop();
-                if(value.length > 3){
-                  DatePicker.showTimePicker(context, showSecondsColumn: false, onConfirm: (time){
-                    final newTask = Task.create(value, time);
-                  });
+                if (value.length > 3) {
+                  DatePicker.showTimePicker(
+                    context,
+                    showSecondsColumn: false,
+                    onConfirm: (time) {
+                      final newTask = Task.create(value, time);
+                      taskList.add(newTask);
+                      setState(() {});
+                    },
+                  );
                 }
               },
             ),
