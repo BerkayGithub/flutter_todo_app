@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
+import 'package:flutter_todo_app/data/local_storage.dart';
+import 'package:flutter_todo_app/main.dart';
 import 'package:flutter_todo_app/models/task.dart';
 import 'package:flutter_todo_app/uiparts/task_list_item.dart';
 
@@ -12,12 +14,15 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late List<Task> taskList;
+  late LocalStorage _localStorage;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     taskList = <Task>[];
+    _localStorage = locator<LocalStorage>();
+    _getAllTaskFromDb();
   }
 
   @override
@@ -58,6 +63,7 @@ class _HomePageState extends State<HomePage> {
             key: Key(oankiEleman.id),
             onDismissed: (direction){
               taskList.removeAt(index);
+              _localStorage.deleteTask(task: oankiEleman);
               setState(() {
               });
             },
@@ -91,9 +97,10 @@ class _HomePageState extends State<HomePage> {
                   DatePicker.showTimePicker(
                     context,
                     showSecondsColumn: false,
-                    onConfirm: (time) {
+                    onConfirm: (time) async{
                       final newTask = Task.create(value, time);
-                      taskList.add(newTask);
+                      taskList.insert(0, newTask);
+                      await _localStorage.addTask(task: newTask);
                       setState(() {});
                     },
                   );
@@ -104,5 +111,11 @@ class _HomePageState extends State<HomePage> {
         );
       },
     );
+  }
+
+  void _getAllTaskFromDb() async{
+    taskList = await _localStorage.getAllTasks();
+    setState(() {
+    });
   }
 }

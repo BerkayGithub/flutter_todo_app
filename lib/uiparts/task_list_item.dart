@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_todo_app/data/local_storage.dart';
+import 'package:flutter_todo_app/main.dart';
 import 'package:flutter_todo_app/models/task.dart';
 import 'package:intl/intl.dart';
 
@@ -14,11 +16,17 @@ class TaskListItem extends StatefulWidget {
 class _TaskListItemState extends State<TaskListItem> {
   final TextEditingController _taskDescriptionController =
       TextEditingController();
+  late LocalStorage _localStorage;
+
+  void setup(){
+    _localStorage = locator<LocalStorage>();
+  }
 
   @override
   void initState() {
     super.initState();
     _taskDescriptionController.text = widget.task.description;
+    setup();
   }
 
   @override
@@ -50,7 +58,8 @@ class _TaskListItemState extends State<TaskListItem> {
                 onSubmitted: (yeniDeger) {
                   if (yeniDeger.length > 3) {
                     setState(() {
-                      widget.task.setNewDescription(yeniDeger);
+                      widget.task.description = yeniDeger;
+                      _localStorage.updateTask(task: widget.task);
                     });
                   }
                 },
@@ -62,7 +71,8 @@ class _TaskListItemState extends State<TaskListItem> {
         leading: GestureDetector(
           onTap: () {
             setState(() {
-              widget.task.setCompleted();
+              widget.task.isCompleted = !widget.task.isCompleted;
+              _localStorage.updateTask(task: widget.task);
             });
           },
           child: Container(
