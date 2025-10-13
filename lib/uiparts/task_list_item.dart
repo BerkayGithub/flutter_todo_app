@@ -18,19 +18,15 @@ class _TaskListItemState extends State<TaskListItem> {
       TextEditingController();
   late LocalStorage _localStorage;
 
-  void setup(){
+  @override
+  void initState() {
+    super.initState();
     _localStorage = locator<LocalStorage>();
   }
 
   @override
-  void initState() {
-    super.initState();
-    _taskDescriptionController.text = widget.task.description;
-    setup();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    _taskDescriptionController.text = widget.task.description;
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
