@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_todo_app/data/local_storage.dart';
 import 'package:flutter_todo_app/main.dart';
@@ -43,7 +44,7 @@ class CustomSearchDelegate extends SearchDelegate{
             background: Row(
               children: [
                 Icon(Icons.delete),
-                Text("Bu görevi sil")
+                Text("remove_task").tr()
               ],
             ),
             key: Key(oankiEleman.id),
@@ -55,7 +56,7 @@ class CustomSearchDelegate extends SearchDelegate{
         );
       },
       itemCount: filteredList.length,
-    ) : Center(child: Text("Aradığınızı bulamadık"));
+    ) : Center(child: Text("search_not_found").tr());
   }
 
   @override
